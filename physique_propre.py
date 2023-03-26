@@ -17,16 +17,21 @@ import numpy as np
 random.seed(0)
 
 
+'''
+Partie I : On fait simplement des simulations comme dans le papier de Kirman (Figure II)
+'''
+
+
 def nlle_iteration(N, k, epsilon, delta):
     '''
     Cette fonction calcule le nombre de fourmis sur la source noire après une itération.
     INPUT:
         N: int, nombre de fourmis
         k: int, nombre de fourmis sur la source noire
-        epsilon: float, probabilité qu'une fourmi soit convertie
-        delta: float, probabilité qu'une fourmi s'autoconvertisse
+        epsilon: float, probabilité qu'une fourmi s'autoconvertisse
+        delta: float, probabilité qu'une fourmi ne soit pas convertie
     OUTPUT:
-        k: int, nombre de fourmis sur la source noire après une itération
+        k: int, nombre de fourmis sur la source noire après l'itération
     '''
 
     # On tire un réel entre 0 et 1 (pour simuler un tirage aléatoire)
@@ -37,7 +42,7 @@ def nlle_iteration(N, k, epsilon, delta):
     
     p2 = (k/N)*(epsilon + (1 - delta)*((N-k)/(N-1)))
     
-    p3 = 1 - p1 - p2 
+    # p3 = 1 - p1 - p2 # Ce calcul est inutile
     
     # Créer des intervalles et voir dans lequel atterrit le tirage
     # intervalle pour p1 : [0,p1)
@@ -54,18 +59,16 @@ def nlle_iteration(N, k, epsilon, delta):
     # On renvoie le nombre de fourmis
     return k
 
-'''
-Partie I : On fait simplement des simulations comme dans le papier de Kirman (Figure II)
-'''
 
 def afficher_graphe(delta, epsilon, N=100, nb_iterations=100000):
     '''
     Cette fonction affiche le graphe du nombre de fourmis sur la source noire en fonction du nombre de rencontres.
     INPUT:
-        nb_iterations: int, nombre d'itérations
-        delta: float, probabilité qu'une fourmi s'autoconvertisse
-        epsilon: float, probabilité qu'une fourmi soit convertie
+    INPUT:
+        delta: float, probabilité qu'une fourmi ne soit pas convertie
+        epsilon: float, probabilité qu'une fourmi s'autoconvertisse
         N: int, nombre de fourmis
+        nb_iterations: int, nombre de rencontres
     OUTPUT:
         None
     '''
@@ -124,7 +127,25 @@ def afficher_graphe(delta, epsilon, N=100, nb_iterations=100000):
 # afficher_graphe(delta=0.01, epsilon=0.002) # Figure IIb
 
 
+
+
+
+'''
+Partie II : On vérifie les estimations théoriques données par Kirman (Figure I)
+'''
+
+
 def obtenir_liste_etats(delta, epsilon, N=100, nb_iterations=100000):
+    '''
+    Cette fonction renvoie la liste des états du nombre de fourmis sur la source noire.
+    INPUT:
+        delta: float, probabilité qu'une fourmi ne soit pas convertie
+        epsilon: float, probabilité qu'une fourmi s'autoconvertisse
+        N: int, nombre de fourmis
+        nb_iterations: int, nombre de rencontres
+    OUTPUT:
+        liste_etats: list, liste des états du nombre de fourmis sur la source noire  
+    '''
 
     # On veut stocker le nombre de fourmis sur la source noire à chaque itération.
 
@@ -155,111 +176,101 @@ def obtenir_liste_etats(delta, epsilon, N=100, nb_iterations=100000):
     
     return liste_etats
 
-def afficher_convergence(delta, epsilon, N=100, nb_iterations=100000, nb_processus=100):
-    # On veut avoir 100 listes d'états et calculer l'état moyen sur ces 100 listes
 
-    liste_de_listes = []
 
-    for i in range(nb_processus):
-        print(i)
-        liste_de_listes.append(obtenir_liste_etats(delta, epsilon, N, nb_iterations))
-    
-    # On a 100 listes de 100000 éléments
-    # On veut une seule liste avec les moyennes à chaque fois
 
-    liste_moyennes = []
-    for i in range(nb_iterations + 1):
-        liste_moyennes.append(np.mean([liste_de_listes[j][i] for j in range(nb_processus)]))
+def afficher_temps(delta, epsilon, N=100, nb_iterations=100000):
+    '''
+    Cette fonction affiche le graphe du temps passé à chaque état.
+    INPUT:
+        delta: float, probabilité qu'une fourmi ne soit pas convertie
+        epsilon: float, probabilité qu'une fourmi s'autoconvertisse
+        N: int, nombre de fourmis
+        nb_iterations: int, nombre de rencontres
+    OUTPUT:
+        None
+    '''
 
-    # On a la liste des moyennes
-    # Maintenant on va la plotter
-
-    print(nb_iterations//50 + 1) # on veut 2001
-    x = [i for i in range(nb_iterations//50 + 1)] # on va faire 100000 itérations
-    y = [liste_moyennes[i] for i in range(len(liste_moyennes) + 1) if i%50 == 0]
-
-    # Il ne reste qu'à plotter
-    plt.plot(x,y)
-    plt.xlim(0, nb_iterations//50)
-    plt.ylim(0, N)
-    plt.show()
-
-# afficher_convergence(delta=0, epsilon=0, nb_processus=100)
-# afficher_convergence(delta=0.001, epsilon=0.005)
-
-'''
-Partie II : On vérifie les estimations théoriques données par Kirman (Figure I)
-'''
-
-def afficher_temps_moyen(delta, epsilon, N=100, nb_iterations=100000):
-
-    # On veut une liste de 100 éléments, qui contient le temps moyen passé à chaque état (en considérant le temps comme le nombre
+    # On veut une liste de 100 éléments, qui contient le temps passé à chaque état (en considérant le temps comme le nombre
     # d'itérations où on a été à cet état)
 
     # On veut stocker le nombre de fourmis sur la source noire à chaque itération.
     liste_etats = obtenir_liste_etats(delta, epsilon, N, nb_iterations)
 
-    liste_temps_moyens = []
+    liste_temps = []
     for i in range(N + 1):
-        print(i)
         ct = 0
         for j in liste_etats:
             if j == i:
                 ct += 1
-        liste_temps_moyens.append(ct)
+        liste_temps.append(ct)
 
-    # On a la liste des temps moyens
+    # On a la liste des temps
     # Maintenant on va la plotter
 
     x = [i for i in range(101)]
-    y = liste_temps_moyens
-
-
-    total = 0
-    for i in y:
-        total += i
-    print(total)
+    y = liste_temps
 
     # Il ne reste qu'à plotter
     plt.plot(x,y)
+    plt.xlabel("Nombre de fourmis sur la source noire")
     plt.xlim(0, N)
+    plt.ylabel("Temps passé à cet état (en nombre d'itérations)")
     plt.ylim(0, 20000)
     plt.show()
 
-# afficher_temps_moyen(delta=0.01, epsilon=0.005)
+# afficher_temps(delta=0.01, epsilon=0.005) # Figure Ia
 # plt.close()
-# afficher_temps_moyen(delta=0.3, epsilon=0.15)
+# afficher_temps(delta=0.3, epsilon=0.15) # Figure Ic
 # plt.close()
-# afficher_temps_moyen(delta=0, epsilon=0)
+# afficher_temps(delta=0.02, epsilon=0.01) # Figure Ib
+# plt.close()
 
 
-def obtenir_temps_moyen(delta, epsilon, N=100, nb_iterations=100000):
+'''
+On n'a pas ce qu'on veut, on va devoir estimer vers quoi ça converge pour un grand nombre de processus
+'''
 
-    # On veut une liste de 100 éléments, qui contient le temps moyen passé à chaque état (en considérant le temps comme le nombre
+
+
+def obtenir_temps(delta, epsilon, N=100, nb_iterations=100000):
+    '''
+    Cette fonction renvoie la liste du temps passé sur chaque état.
+    INPUT:
+        delta: float, probabilité qu'une fourmi ne soit pas convertie
+        epsilon: float, probabilité qu'une fourmi s'autoconvertisse
+        N: int, nombre de fourmis
+        nb_iterations: int, nombre de rencontres
+    OUTPUT:
+        liste_temps: list, liste des temps passés à chaque état
+    '''
+
+    # On veut une liste de 100 éléments, qui contient le temps passé à chaque état (en considérant le temps comme le nombre
     # d'itérations où on a été à cet état)
 
     # On veut stocker le nombre de fourmis sur la source noire à chaque itération.
     liste_etats = obtenir_liste_etats(delta, epsilon, N, nb_iterations)
 
-    liste_temps_moyens = []
+    liste_temps = []
     for i in range(N + 1):
         ct = 0
         for j in liste_etats:
             if j == i:
                 ct += 1
-        liste_temps_moyens.append(ct)
+        liste_temps.append(ct)
 
-    return liste_temps_moyens
+    return liste_temps
 
 
-def afficher_convergence_temps_moyen(delta, epsilon, N=100, nb_iterations=100000, nb_processus=100):
-    # On veut avoir 100 listes de temps moyen et calculer le temps moyen sur ces 100 listes
+
+def afficher_convergence_temps(delta, epsilon, N=100, nb_iterations=100000, nb_processus=100):
+    # On veut avoir 100 listes de temps et calculer le temps moyen sur ces 100 listes
 
     liste_de_listes = []
 
     for i in range(nb_processus):
-        print(i)
-        liste_de_listes.append(obtenir_temps_moyen(delta, epsilon, N, nb_iterations))
+        print(i+1)
+        liste_de_listes.append(obtenir_temps(delta, epsilon, N, nb_iterations))
     
     # On a 100 listes de 100 éléments
     # On veut une seule liste avec les moyennes à chaque fois
@@ -276,11 +287,22 @@ def afficher_convergence_temps_moyen(delta, epsilon, N=100, nb_iterations=100000
     x = [i for i in range(101)]
 
     plt.plot(x,liste_moyennes)
+    plt.xlabel("Nombre de fourmis sur la source noire")
     plt.xlim(0, N)
+    plt.ylabel("Temps moyen passé à cet état (en nombre d'itérations)")
     plt.ylim(0, 10000)
-    plt.show()   
+    plt.show()
+    
 
-afficher_convergence_temps_moyen(delta=0.01, epsilon=0.005, nb_processus=100)
+
+
+# Pour avoir des figures bien lisses, il faut faire 100 processus, mais c'est long (le compteur des processus s'affiche dans le terminal)
+# afficher_convergence_temps(delta=0.01, epsilon=0.005, nb_processus=100) # Figure Ia
+# plt.close()
+# afficher_convergence_temps(delta=0.02, epsilon=0.01, nb_processus=100) # Figure Ib
+# plt.close()
+# afficher_convergence_temps(delta=0.3, epsilon=0.15, nb_processus=100) # Figure Ic
+# plt.close()
 
 
 
