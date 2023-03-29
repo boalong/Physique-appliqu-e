@@ -331,10 +331,10 @@ def afficher_convergence_temps_densite(delta, epsilon, N=100, nb_iterations=1000
     x = [i for i in range(101)]
 
     plt.plot(x,liste_moyennes)
-    plt.xlabel("Nombre de fourmis sur la source noire")
+    plt.xlabel("Number of ants on the black source")
     plt.xlim(0, N)
-    plt.ylabel("Temps moyen passé à cet état (en nombre d'itérations)")
-    plt.ylim(0, 0.5)
+    plt.ylabel("Density of time spent at this state")
+    plt.ylim(0, 0.075)
     plt.show()
 
 
