@@ -8,9 +8,9 @@ random.seed(0)
 
 # Partie I
 
-afficher_graphe(delta=1, epsilon=0.5) # Premier cas particulier évoqué par Kirman : equilibrium distribution binomiale de paramètres N (le nombre de fourmis), 1/2
-afficher_graphe(delta=0, epsilon=0) # Second cas particulier évoqué par Kirman : martingale avec absorption finale k = 0 ou k = N
-afficher_graphe(delta=0, epsilon=0)
+# afficher_graphe(delta=1, epsilon=0.5) # Premier cas particulier évoqué par Kirman : equilibrium distribution binomiale de paramètres N (le nombre de fourmis), 1/2
+# afficher_graphe(delta=0, epsilon=0) # Second cas particulier évoqué par Kirman : martingale avec absorption finale k = 0 ou k = N
+# afficher_graphe(delta=0, epsilon=0)
 
 # afficher_graphe(delta=0.3, epsilon=0.15) # Figure IIa
 # afficher_graphe(delta=0.01, epsilon=0.002) # Figure IIb

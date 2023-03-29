@@ -402,7 +402,6 @@ def nlle_iteration_becker(N, k, epsilon, delta):
         k: int, nombre de fourmis sur la source noire
         epsilon: float, probabilité qu'une fourmi s'autoconvertisse
         delta: float, probabilité qu'une fourmi ne soit pas convertie
-        majority: str, couleur de la majorité
     OUTPUT:
         k: int, nombre de fourmis sur la source noire après l'itération
     '''
@@ -424,13 +423,13 @@ def nlle_iteration_becker(N, k, epsilon, delta):
 
     elif majority == 'white':
         # Calculer p1, p2, p3
-        p1 = (1 - k/N)*(epsilon) # Probabilité qu'une fourmi passe de la source blanche à la source noire (elle ne peut pas être convertie par une autre fourmi mais seulement s'auto-convertir)
-        p2 = (k/N)*(epsilon + (1 - delta)*((N-k)/(N-1))) # Probabilité qu'une fourmi passe de la source noire à la source blanche
+        p1 = (1 - k/N)*(epsilon + (1 - delta)*(k/(N-1))*(1 - k/N)) # Probabilité qu'une fourmi passe de la source blanche à la source noire
+        p2 = (k/N)*(epsilon + (1 - delta)*((N-k)/(N-1))*(1 + k/N)) # Probabilité qu'une fourmi passe de la source noire à la source blanche
 
     elif majority == 'black':
         # Calculer p1, p2, p3
-        p1 = (1 - k/N)*(epsilon + (1 - delta)*(k/(N-1))) # Probabilité qu'une fourmi passe de la source blanche à la source noire
-        p2 = (k/N)*(epsilon) # Probabilité qu'une fourmi passe de la source noire à la source blanche (elle ne peut pas être convertie par une autre fourmi mais seulement s'auto-convertir)
+        p1 = (1 - k/N)*(epsilon + (1 - delta)*(k/(N-1))*(1 + k/N)) # Probabilité qu'une fourmi passe de la source blanche à la source noire
+        p2 = (k/N)*(epsilon + (1 - delta)*((N-k)/(N-1))*(1 - k/N)) # Probabilité qu'une fourmi passe de la source noire à la source blanche
     
     # p3 = 1 - p1 - p2 # Ce calcul est inutile, probabilité qu'une fourmi reste sur la même source
     
@@ -512,6 +511,7 @@ def afficher_graphe_becker(delta, epsilon, N=100, nb_iterations=100000):
 
 # afficher_graphe_becker(delta=1, epsilon=0.5) # Premier cas particulier évoqué par Kirman : equilibrium distribution binomiale de paramètres N (le nombre de fourmis), 1/2
 # afficher_graphe_becker(delta=0, epsilon=0) # Second cas particulier évoqué par Kirman : martingale avec absorption finale k = 0 ou k = N
+# afficher_graphe_becker(delta=0, epsilon=0)
 
 # afficher_graphe_becker(delta=0.3, epsilon=0.15) # Figure IIa
 # afficher_graphe_becker(delta=0.01, epsilon=0.002) # Figure IIb
