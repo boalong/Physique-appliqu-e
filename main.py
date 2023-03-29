@@ -1,6 +1,4 @@
-from physique_propre import *
-from scipy.stats import binom
-import matplotlib.pyplot as plt
+from fonctions import *
 
 import random
 
