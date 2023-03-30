@@ -1,4 +1,4 @@
-from fonctions import *
+from functions import *
 
 import random
 
