@@ -388,7 +388,7 @@ def comparer_convergence_temps_densite_cas_1(delta=1, epsilon=0.5, N=100, nb_ite
 
 def nlle_iteration_becker(N, k, epsilon, delta):
     '''
-    Cette fonction calcule le nombre de fourmis sur la source noire après une itération.
+    Cette fonction calcule le nombre de fourmis sur la source noire après une itération, sous les hypothèses de Becker.
     INPUT:
         N: int, nombre de fourmis
         k: int, nombre de fourmis sur la source noire
@@ -443,7 +443,7 @@ def nlle_iteration_becker(N, k, epsilon, delta):
 
 def afficher_graphe_becker(delta, epsilon, N=100, nb_iterations=100000):
     '''
-    Cette fonction affiche le graphe du nombre de fourmis sur la source noire en fonction du nombre de rencontres.
+    Cette fonction affiche le graphe du nombre de fourmis sur la source noire en fonction du nombre de rencontres, sous les hypothèses de Becker.
     INPUT:
     INPUT:
         delta: float, probabilité qu'une fourmi ne soit pas convertie
